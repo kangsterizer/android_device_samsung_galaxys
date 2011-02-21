@@ -23,7 +23,7 @@ BOARD_USES_GENERIC_AUDIO := false
 BOARD_USES_LIBSECRIL_STUB := true
 
 # Use the non-open-source parts, if they're present
--include vendor/samsung/galaxys/BoardConfigVendor.mk
+-include vendor/samsung/common/BoardConfigVendor.mk
 
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
@@ -38,7 +38,7 @@ TARGET_NO_RADIOIMAGE := true
 
 TARGET_PROVIDES_INIT := true
 TARGET_PROVIDES_INIT_TARGET_RC := true
-TARGET_BOARD_PLATFORM := s5pc110
+TARGET_BOARD_PLATFORM := s5pv210
 TARGET_BOOTLOADER_BOARD_NAME := aries
 
 # Releasetools
@@ -61,8 +61,6 @@ BOARD_V4L2_DEVICE := /dev/video1
 BOARD_CAMERA_DEVICE := /dev/video0
 BOARD_SECOND_CAMERA_DEVICE := /dev/video2
 
-BOARD_USES_OVERLAY := true
-
 # FM Radio
 BOARD_HAVE_FM_RADIO := true
 BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
@@ -70,7 +68,7 @@ BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
 BOARD_NAND_PAGE_SIZE := 4096 -s 128
 BOARD_KERNEL_BASE := 0x32000000
 BOARD_KERNEL_PAGESIZE := 4096
-BOARD_KERNEL_CMDLINE := console=ttySAC2,115200 init=/init no_console_suspend
+BOARD_KERNEL_CMDLINE := console=ttyFIQ0,115200 init=/init no_console_suspend
 
 BOARD_BOOTIMAGE_PARTITION_SIZE := 7864320
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 196608000
@@ -94,3 +92,6 @@ BOARD_HAS_MTD_CACHE := true
 BOARD_HAS_SDCARD_INTERNAL := true
 BOARD_SDCARD_DEVICE_INTERNAL := /dev/block/mmcblk0p1
 BOARD_HAS_DOWNLOAD_MODE := true
+
+# Include aries specific stuff
+-include device/samsung/common/aries.mk

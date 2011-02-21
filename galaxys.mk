@@ -75,7 +75,7 @@ PRODUCT_PACKAGES += \
 
 # These are the OpenMAX IL configuration files
 PRODUCT_COPY_FILES += \
-	device/samsung/galaxys/sec_mm/sec_omx/sec_omx_core/secomxregistry:system/etc/secomxregistry \
+	device/samsung/common/aries/sec_mm/sec_omx/sec_omx_core/secomxregistry:system/etc/secomxregistry \
 	device/samsung/galaxys/media_profiles.xml:system/etc/media_profiles.xml
 
 # These are the OpenMAX IL modules
@@ -169,4 +169,4 @@ PRODUCT_COPY_FILES += \
 # half of the device-specific product definition file takes care
 # of the aspects that require proprietary drivers that aren't
 # commonly available
-$(call inherit-product-if-exists, vendor/samsung/galaxys/device-vendor.mk)
+$(call inherit-product-if-exists, vendor/samsung/common/device-vendor.mk)
