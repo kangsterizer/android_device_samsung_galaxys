@@ -100,10 +100,6 @@ PRODUCT_PACKAGES += \
 	libcamera \
 	libstagefrighthw
 
-# Input device calibration files
-PRODUCT_COPY_FILES += \
-	device/samsung/galaxys/mxt224_ts_input.idc:system/usr/idc/mxt224_ts_input.idc
-
 # apns config file
 PRODUCT_COPY_FILES += \
         vendor/cyanogen/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml
