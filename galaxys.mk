@@ -48,15 +48,17 @@ PRODUCT_COPY_FILES := \
 
 # Init files
 PRODUCT_COPY_FILES += \
+	device/samsung/galaxys/init.rc:root/init.rc \
 	device/samsung/galaxys/init.aries.rc:root/init.aries.rc \
 	device/samsung/galaxys/ueventd.aries.rc:root/ueventd.aries.rc \
-        device/samsung/galaxys/recovery.rc:root/recovery.rc
+	device/samsung/galaxys/mmcwait.sh:recovery/root/sbin/mmcwait.sh \
+	device/samsung/galaxys/recovery.rc:root/recovery.rc
 
 # Recovery Files
 PRODUCT_COPY_FILES += \
-	device/samsung/galaxys/init.aries.rc:recovery/root/init.aries.rc \
-	device/samsung/galaxys/ueventd.aries.rc:recovery/root/ueventd.aries.rc \
-        device/samsung/galaxys/recovery.rc:recovery/root/recovery.rc
+   device/samsung/galaxys/recovery.rc:recovery/root/recovery.rc \
+   device/samsung/galaxys/fbsetup.sh:recovery/root/sbin/fbsetup.sh
+
 
 # Prebuilt kl keymaps
 PRODUCT_COPY_FILES += \
@@ -149,23 +151,34 @@ PRODUCT_TAGS += dalvik.gc.type-precise
 # PRODUCT_LOCALES expansion must not be a density.
 PRODUCT_LOCALES := hdpi
 
+hack_PRODUCT_OUT := out/target/product/galaxys
 # kernel modules
 PRODUCT_COPY_FILES += \
-	device/samsung/galaxys/bcm4329.ko:system/modules/bcm4329.ko \
-	device/samsung/galaxys/cifs.ko:system/modules/cifs.ko \
-	device/samsung/galaxys/tun.ko:system/modules/tun.ko
+	$(hack_PRODUCT_OUT)/kernel_build/drivers/net/wireless/bcm4329/bcm4329.ko:system/modules/bcm4329.ko \
+	$(hack_PRODUCT_OUT)/kernel_build/fs/cifs/cifs.ko:system/modules/cifs.ko \
+	$(hack_PRODUCT_OUT)/kernel_build/drivers/net/tun.ko:system/modules/tun.ko
 
 ifeq ($(TARGET_PREBUILT_ZIMAGE),)
-LOCAL_ZIMAGE := device/samsung/galaxys/zImage
+LOCAL_ZIMAGE = $(hack_PRODUCT_OUT)/kernel
 else
 LOCAL_ZIMAGE := $(TARGET_PREBUILT_ZIMAGE)
 endif
 
-PRODUCT_COPY_FILES += \
-    $(LOCAL_ZIMAGE):zImage
+$(hack_PRODUCT_OUT)/kernel_build/drivers/net/wireless/bcm4329/bcm4329.ko: $(LOCAL_ZIMAGE)
+$(hack_PRODUCT_OUT)/kernel_build/fs/cifs/cifs.ko: $(LOCAL_ZIMAGE)
+$(hack_PRODUCT_OUT)/kernel_build/drivers/net/tun.ko: $(LOCAL_ZIMAGE)
 
-PRODUCT_COPY_FILES += \
-    $(LOCAL_ZIMAGE):kernel
+.PHONY: build_kernel
+
+$(hack_PRODUCT_OUT)/kernel_build/.config:
+	$(hide) mkdir -p $(PRODUCT_OUT)/kernel_build
+	$(hide) $(MAKE) -C kernel/samsung/2.6.35 O=$(ANDROID_BUILD_TOP)/$(PRODUCT_OUT)/kernel_build aries_galaxys_defconfig
+
+$(hack_PRODUCT_OUT)/kernel: $(hack_PRODUCT_OUT)/recovery.img $(hack_PRODUCT_OUT)/kernel_build/.config build_kernel
+	$(hide) $(MAKE) -C kernel/samsung/2.6.35 O=$(ANDROID_BUILD_TOP)/$(PRODUCT_OUT)/kernel_build CROSS_COMPILE=$(ANDROID_BUILD_TOP)/$(subst -gcc,-,$(TARGET_CC))
+	$(hide) $(ACP) $(PRODUCT_OUT)/kernel_build/arch/arm/boot/zImage $(PRODUCT_OUT)/kernel
+
+
 
 # See comment at the top of this file. This is where the other
 # half of the device-specific product definition file takes care
