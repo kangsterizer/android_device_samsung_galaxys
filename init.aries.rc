@@ -69,6 +69,9 @@ on post-fs
     # once everything is setup, no need to modify /
     #mount rootfs rootfs / ro remount
 
+    # remove /sbin/sh so that "adb install" can work properly
+    exec /sbin/setupenv.sh
+
     # We chown/chmod /data and /datadata again so because mount is run as root + defaults
     chown system system /data
     chmod 0771 /data
