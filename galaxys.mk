@@ -179,7 +179,6 @@ out/target/product/galaxys/kernel_build/.config:
 
 out/target/product/galaxys/kernel: out/target/product/galaxys/recovery.cpio out/target/product/galaxys/kernel_build/.config build_kernel
 	@echo "BUILDING KERNEL"
-	@echo "recovery.img size: `ls -l out/target/product/galaxys/recovery.img`"
 	$(hide) $(MAKE) -C kernel/samsung/2.6.35 O=$(ANDROID_BUILD_TOP)/$(PRODUCT_OUT)/kernel_build CROSS_COMPILE=$(ANDROID_BUILD_TOP)/$(subst -gcc,-,$(TARGET_CC))
 	$(hide) $(ACP) $(PRODUCT_OUT)/kernel_build/arch/arm/boot/zImage $(PRODUCT_OUT)/kernel
 
