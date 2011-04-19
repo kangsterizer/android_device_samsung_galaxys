@@ -157,9 +157,24 @@ PRODUCT_LOCALES := hdpi
 
 # kernel modules
 PRODUCT_COPY_FILES += \
-	out/target/product/galaxys/kernel_build/drivers/net/wireless/bcm4329/bcm4329.ko:system/modules/bcm4329.ko \
+	out/target/product/galaxys/kernel_build/drivers/net/wireless/bcm4329/dhd.ko:system/modules/dhd.ko \
+	out/target/product/galaxys/kernel_build/crypto/ansi_cprng.ko:system/ansi_cprng.ko \
+	out/target/product/galaxys/kernel_build/drivers/scsi/scsi_wait_scan.ko:system/modules/scsi_wait_scan.ko \
+	out/target/product/galaxys/kernel_build/drivers/misc/fm_si4709/Si4709_driver.ko:system/modules/Si4709_driver.ko \
+	out/target/product/galaxys/kernel_build/drivers/misc/vibetonz/vibrator.ko:system/modules/vibrator.ko \
+	out/target/product/galaxys/kernel_build/drivers/bluetooth/bthid/bthid.ko:system/modules/bthid.ko \
 	out/target/product/galaxys/kernel_build/fs/cifs/cifs.ko:system/modules/cifs.ko \
 	out/target/product/galaxys/kernel_build/drivers/net/tun.ko:system/modules/tun.ko
+
+KERNEL_MODULES = \
+	out/target/product/galaxys/kernel_build/drivers/net/wireless/bcm4329/dhd.ko \
+	out/target/product/galaxys/kernel_build/crypto/ansi_cprng.ko \
+	out/target/product/galaxys/kernel_build/drivers/scsi/scsi_wait_scan.ko \
+	out/target/product/galaxys/kernel_build/drivers/misc/fm_si4709/Si4709_driver.ko \
+	out/target/product/galaxys/kernel_build/drivers/misc/vibetonz/vibrator.ko \
+	out/target/product/galaxys/kernel_build/drivers/bluetooth/bthid/bthid.ko \
+	out/target/product/galaxys/kernel_build/fs/cifs/cifs.ko \
+	out/target/product/galaxys/kernel_build/drivers/net/tun.ko
 
 ifeq ($(TARGET_PREBUILT_ZIMAGE),)
 LOCAL_ZIMAGE = out/target/product/galaxys/kernel
@@ -167,9 +182,7 @@ else
 LOCAL_ZIMAGE := $(TARGET_PREBUILT_ZIMAGE)
 endif
 
-out/target/product/galaxys/kernel_build/drivers/net/wireless/bcm4329/bcm4329.ko: $(LOCAL_ZIMAGE)
-out/target/product/galaxys/kernel_build/fs/cifs/cifs.ko: $(LOCAL_ZIMAGE)
-out/target/product/galaxys/kernel_build/drivers/net/tun.ko: $(LOCAL_ZIMAGE)
+$(KERNEL_MODULES): $(LOCAL_ZIMAGE)
 
 .PHONY: build_kernel
 
