@@ -305,11 +305,11 @@ service dumpstate /system/bin/dumpstate -s
     disabled
     oneshot
 
-service orientationd /system/bin/orientationd
+service orientationd /system/vendor/bin/orientationd
     user compass
     group input
 
-service geomagneticd /system/bin/geomagneticd
+service geomagneticd /system/vendor/bin/geomagneticd
     user compass
     group system input
 
