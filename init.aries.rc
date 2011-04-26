@@ -306,11 +306,11 @@ service dumpstate /system/bin/dumpstate -s
     oneshot
 
 service orientationd /system/vendor/bin/orientationd
-    user compass
+    user system
     group input
 
 service geomagneticd /system/vendor/bin/geomagneticd
-    user compass
+    user system
     group system input
 
 service console /system/bin/sh
