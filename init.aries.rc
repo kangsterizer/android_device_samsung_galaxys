@@ -65,6 +65,37 @@ on fs
 # Permissions for System Server and daemons.
     chown system system /sys/class/backlight/s5p_bl/brightness
 
+    chown system input /sys/class/input/input2/enable
+    chown system input /sys/class/input/input2/delay
+    chown system input /sys/class/input/input2/wake
+    chown system input /sys/class/input/input2/threshold
+    chown system input /sys/class/input/input2/distortion
+    chown system input /sys/class/input/input2/shape
+    chown system input /sys/class/input/input2/offsets
+    chown system input /sys/class/input/input2/filter_enable
+    chown system input /sys/class/input/input2/filter_len
+    chown system input /sys/class/input/input2/data
+    chown system input /sys/class/input/input2/status
+    chown system input /sys/class/input/input2/position
+
+    chown system input /sys/class/input/input3/enable
+    chown system input /sys/class/input/input3/delay
+    chown system input /sys/class/input/input3/wake
+    chown system input /sys/class/input/input3/threshold
+    chown system input /sys/class/input/input3/distortion
+    chown system input /sys/class/input/input3/shape
+    chown system input /sys/class/input/input3/offsets
+    chown system input /sys/class/input/input3/filter_enable
+    chown system input /sys/class/input/input3/filter_len
+    chown system input /sys/class/input/input3/data
+    chown system input /sys/class/input/input3/status
+    chown system input /sys/class/input/input3/position
+
+    chown system input /sys/class/input/input4/enable
+    chown system input /sys/class/input/input4/delay
+    chown system input /sys/class/input/input4/wake
+    chown system input /dev/i2c-12
+
 on post-fs
     # once everything is setup, no need to modify /
     #mount rootfs rootfs / ro remount
@@ -305,13 +336,14 @@ service dumpstate /system/bin/dumpstate -s
     disabled
     oneshot
 
-service orientationd /system/vendor/bin/orientationd
-    user compass
-    group input
-
 service geomagneticd /system/vendor/bin/geomagneticd
-    user compass
-    group system input
+    user system
+    group system input inet
+
+
+service orientationd /system/vendor/bin/orientationd
+    user system
+    group system input inet
 
 service console /system/bin/sh
     console
