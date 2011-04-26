@@ -32,8 +32,17 @@ on boot
 
 # change permission for uart_switch
     chown radio radio /sys/class/sec/uart_switch/UART_SEL/value
+    chown compass root /sys/class/input/input3/distortion
+    chown compass root /sys/class/input/input3/offsets
+    chown compass root /sys/class/input/input3/shape
+    chown compass root /sys/class/input/input3/threshold
     chmod 660 /sys/class/sec/uart_switch/UART_SEL/value
 
+# change permission for compass
+    chown compass input /sys/class/input/input3/offsets
+    chown compass input /sys/class/input/input3/shape
+    chown compass input /sys/class/input/input3/distortion
+    chown compass input /sys/class/input/input3/threshold
 # create data/gps for GPS demon
     mkdir /data/gps 700 gps system
     chown gps system /data/gps
@@ -43,7 +52,7 @@ on boot
 on fs
     mount yaffs2 mtd@system /system
     mount yaffs2 mtd@cache /cache
-    mount ext4 /dev/block/mmcblk0p2 /data nosuid nodev noatime nodiratime noauto_da_alloc
+    mount ext4 /dev/block/mmcblk0p2 /data wait nosuid nodev noatime nodiratime noauto_da_alloc
     mount yaffs2 mtd@datadata /datadata
 
 # We chown/chmod /efs because mount is run as root + defaults
@@ -65,36 +74,7 @@ on fs
 # Permissions for System Server and daemons.
     chown system system /sys/class/backlight/s5p_bl/brightness
 
-    chown system input /sys/class/input/input2/enable
-    chown system input /sys/class/input/input2/delay
-    chown system input /sys/class/input/input2/wake
-    chown system input /sys/class/input/input2/threshold
-    chown system input /sys/class/input/input2/distortion
-    chown system input /sys/class/input/input2/shape
-    chown system input /sys/class/input/input2/offsets
-    chown system input /sys/class/input/input2/filter_enable
-    chown system input /sys/class/input/input2/filter_len
-    chown system input /sys/class/input/input2/data
-    chown system input /sys/class/input/input2/status
-    chown system input /sys/class/input/input2/position
 
-    chown system input /sys/class/input/input3/enable
-    chown system input /sys/class/input/input3/delay
-    chown system input /sys/class/input/input3/wake
-    chown system input /sys/class/input/input3/threshold
-    chown system input /sys/class/input/input3/distortion
-    chown system input /sys/class/input/input3/shape
-    chown system input /sys/class/input/input3/offsets
-    chown system input /sys/class/input/input3/filter_enable
-    chown system input /sys/class/input/input3/filter_len
-    chown system input /sys/class/input/input3/data
-    chown system input /sys/class/input/input3/status
-    chown system input /sys/class/input/input3/position
-
-    chown system input /sys/class/input/input4/enable
-    chown system input /sys/class/input/input4/delay
-    chown system input /sys/class/input/input4/wake
-    chown system input /dev/i2c-12
 
 on post-fs
     # once everything is setup, no need to modify /
@@ -336,14 +316,13 @@ service dumpstate /system/bin/dumpstate -s
     disabled
     oneshot
 
-service geomagneticd /system/vendor/bin/geomagneticd
-    user system
-    group system input inet
-
-
 service orientationd /system/vendor/bin/orientationd
-    user system
-    group system input inet
+    user compass
+    group input
+
+service geomagneticd /system/vendor/bin/geomagneticd
+    user compass
+    group system input
 
 service console /system/bin/sh
     console
