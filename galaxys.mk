@@ -156,30 +156,18 @@ PRODUCT_LOCALES := hdpi
 
 # kernel modules
 PRODUCT_COPY_FILES += \
-	out/target/product/galaxys/kernel_build/drivers/net/wireless/bcm4329/bcm4329.ko:system/lib/modules/bcm4329.ko \
-	out/target/product/galaxys/kernel_build/fs/cifs/cifs.ko:system/lib/modules/cifs.ko \
-	out/target/product/galaxys/kernel_build/drivers/net/tun.ko:system/lib/modules/tun.ko
+    device/samsung/galaxys/bcm4329.ko:system/modules/bcm4329.ko \
+    device/samsung/galaxys/cifs.ko:system/modules/cifs.ko \
+    device/samsung/galaxys/tun.ko:system/modules/tun.ko
 
-ifeq ($(TARGET_PREBUILT_ZIMAGE),)
-LOCAL_ZIMAGE = out/target/product/galaxys/kernel
+ifeq ($(TARGET_PREBUILT_KERNEL),)
+    LOCAL_KERNEL := device/samsung/galaxys/kernel
 else
-LOCAL_ZIMAGE := $(TARGET_PREBUILT_ZIMAGE)
+    LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
 endif
 
-out/target/product/galaxys/kernel_build/drivers/net/wireless/bcm4329/bcm4329.ko: $(LOCAL_ZIMAGE)
-out/target/product/galaxys/kernel_build/fs/cifs/cifs.ko: $(LOCAL_ZIMAGE)
-out/target/product/galaxys/kernel_build/drivers/net/tun.ko: $(LOCAL_ZIMAGE)
-
-.PHONY: build_kernel
-
-out/target/product/galaxys/kernel_build/.config:
-	$(hide) mkdir -p $(PRODUCT_OUT)/kernel_build
-	$(hide) $(MAKE) -C kernel/samsung/2.6.35 O=$(ANDROID_BUILD_TOP)/$(PRODUCT_OUT)/kernel_build aries_galaxys_defconfig
-
-out/target/product/galaxys/kernel: out/target/product/galaxys/recovery.cpio out/target/product/galaxys/kernel_build/.config build_kernel
-	@echo "BUILDING KERNEL"
-	$(hide) $(MAKE) -C kernel/samsung/2.6.35 O=$(ANDROID_BUILD_TOP)/$(PRODUCT_OUT)/kernel_build CROSS_COMPILE=$(ANDROID_BUILD_TOP)/$(subst -gcc,-,$(TARGET_CC))
-	$(hide) $(ACP) $(PRODUCT_OUT)/kernel_build/arch/arm/boot/zImage $(PRODUCT_OUT)/kernel
+PRODUCT_COPY_FILES += \
+    $(LOCAL_KERNEL):kernel
 
 # See comment at the top of this file. This is where the other
 # half of the device-specific product definition file takes care
